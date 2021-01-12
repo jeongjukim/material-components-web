@@ -1,0 +1,111 @@
+//
+// Copyright 2021 Google Inc.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+//
+
+@use 'sass:map';
+@use '@material/theme/theme';
+@use './button-shared-theme';
+
+$light-theme: (
+  container-fill-color: transparent,
+  container-disabled-fill-color: transparent,
+  label-color: primary,
+  label-disabled-color: button-shared-theme.$disabled-ink-color,
+  icon-color: null,
+  icon-disabled-color: null,
+  ripple-color: primary,
+  ripple-opacity: null,
+  density-scale: button-shared-theme.$density-scale,
+  shape-radius: button-shared-theme.$shape-radius,
+  horizontal-padding: button-shared-theme.$horizontal-padding,
+);
+
+/// Sets theme based on provided theme configuration.
+/// Only emits theme related styles.
+/// @param {Map} $theme - Theme configuration to use.
+@mixin theme($theme, $query: feature-targeting.all()) {
+  @include theme.validate-keys($light-theme, $theme);
+
+  @include button-shared-theme.container-fill-color(
+    map.get($theme, container-fill-color),
+    $query: $query
+  );
+  @include button-shared-theme.disabled-container-fill-color(
+    map.get($theme, container-disabled-fill-color),
+    $query: $query
+  );
+
+  @include button-shared-theme.ink-color(
+    map.get($theme, label-color),
+    $query: $query
+  );
+  @include button-shared-theme.disabled-ink-color(
+    map.get($theme, label-disabled-color),
+    $query: $query
+  );
+
+  @include button-shared-theme.icon-color(
+    map.get($theme, icon-color),
+    $query: $query
+  );
+  @include button-shared-theme.disabled-icon-color(
+    map.get($theme, icon-disabled-color),
+    $query: $query
+  );
+
+  $ripple-color: map.get($theme, ripple-color);
+  $ripple-opacity: map.get($theme, ripple-opacity);
+  @if $ripple-color {
+    @include button-shared-theme.ripple-states(
+      $color: $ripple-color,
+      $opacity-map: $ripple-opacity,
+      $query: $query
+    );
+  }
+
+  $density: map.get($theme, density-scale);
+  @if $density != null {
+    @include button-shared-theme.density(
+      $density-scale: $density,
+      $query: $query
+    );
+  }
+
+  $shape-radius: map.get($theme, shape-radius);
+  @if $density == null {
+    $density: $density-scale;
+  }
+  @if $shape-radius {
+    @include button-shared-theme.shape-radius(
+      $shape-radius,
+      $density-scale: $density,
+      $query: $query
+    );
+  }
+
+  $horizontal-padding: map.get($theme, horizontal-padding);
+  @if $horizontal-padding {
+    @include button-shared-theme.horizontal-padding(
+      $horizontal-padding,
+      $query: $query
+    );
+  }
+}

@@ -25,10 +25,9 @@
 
 @use '@material/feature-targeting/feature-targeting';
 @use '@material/ripple/ripple';
-@use '@material/ripple/ripple-theme';
-@use './button-theme';
+@use './button-shared-theme';
 
-@mixin core-styles($query: feature-targeting.all()) {
+@mixin static-styles($query: feature-targeting.all()) {
   $feat-structure: feature-targeting.create-target($query, structure);
 
   @include ripple.common($query); // COPYBARA_COMMENT_THIS_LINE
@@ -36,15 +35,14 @@
   .mdc-button {
     @include ripple.surface(
       $query: $query,
-      $ripple-target: button-theme.$ripple-target
+      $ripple-target: button-shared-theme.$ripple-target
     );
     @include ripple.radius-bounded(
       $query: $query,
-      $ripple-target: button-theme.$ripple-target
+      $ripple-target: button-shared-theme.$ripple-target
     );
-    @include button-theme.ripple-states($color: primary, $query: $query);
 
-    #{button-theme.$ripple-target} {
+    #{button-shared-theme.$ripple-target} {
       @include feature-targeting.targets($feat-structure) {
         position: absolute;
         // Ripple needs content-box as the box sizing and box-sizing: border-box
@@ -58,16 +56,11 @@
 
     // Ripple targets inside outlined buttons set their own `top`/`left`,
     // depending on the border width.
-    &:not(.mdc-button--outlined) #{button-theme.$ripple-target} {
+    &:not(.mdc-button--outlined) #{button-shared-theme.$ripple-target} {
       @include feature-targeting.targets($feat-structure) {
         top: 0;
         left: 0;
       }
     }
-  }
-
-  .mdc-button--raised,
-  .mdc-button--unelevated {
-    @include button-theme.ripple-states($color: on-primary, $query: $query);
   }
 }
